@@ -7,9 +7,11 @@ mod models;
 
 use config::database::Database;
 use db::pool::create_pg_pool;
+use dto::user::{UserResponse};
 
 use anyhow::Result;
-use sqlx::Row;
+
+use crate::models::user::User;
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>>  {
@@ -19,13 +21,22 @@ async fn main() -> Result<(), Box<dyn std::error::Error>>  {
 
     let pool = create_pg_pool(&db).await?;
 
-    // Test query bajarish
-    let row = sqlx::query("SELECT 1 + 1 AS sum")
-        .fetch_one(&pool)
+    // SELECT query — barcha foydalanuvchilarni olish
+    let users: Vec<User> = sqlx::query_as::<_, User>("SELECT * FROM users")
+        .fetch_all(&pool)
         .await?;
 
-    let sum: i32 = row.try_get("sum")?;
-    println!("Test query natijasi: 1 + 1 = {}", sum);
+    // Foydalanuvchilarni aylanish
+    for user in users.iter() {
+        let row = UserResponse {
+            id: user.id.to_string(), // uuid -> string
+            username: user.username.clone(),
+            email: user.email.clone(),
+            created_at: user.created_at.to_rfc3339(), // datetime -> string
+            updated_at: user.updated_at.to_rfc3339(),
+        };
+        println!("Row: {:?}", row);
+    }
 
     Ok(())
 }
