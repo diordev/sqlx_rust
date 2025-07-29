@@ -11,3 +11,10 @@ create-mig-file:
 
 run-migrations:
 	sqlx migrate run
+
+git-pull:
+	git pull origin main
+git-push:
+	git add .
+	git commit -m "Update"
+	git push origin main
