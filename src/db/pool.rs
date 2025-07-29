@@ -6,7 +6,7 @@ use tracing::info;
 use crate::config::database::Database;
 
 pub async fn create_pg_pool(db: &Database) -> Result<PgPool> {
-
+    
     let db_url = db.connection_string();
     info!("Creating PostgreSQL connection pool...");
 
