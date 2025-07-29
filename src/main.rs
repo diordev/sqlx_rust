@@ -19,11 +19,11 @@ async fn main() -> Result<(), Box<dyn std::error::Error>>  {
     let db = Database::new()
         .expect("Database connection configuration is invalid");
 
-    let pool = create_pg_pool(&db).await?;
+    let db_pool = create_pg_pool(&db).await?;
 
     // SELECT query — barcha foydalanuvchilarni olish
     let users: Vec<User> = sqlx::query_as::<_, User>("SELECT * FROM users")
-        .fetch_all(&pool)
+        .fetch_all(&db_pool)
         .await?;
     // Foydalanuvchilarni aylanish
     for user in users.iter() {
@@ -40,7 +40,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>>  {
     // SELECT query - 1 ta foydalanuvchini olish
     let query: User = sqlx::query_as::<_, User>("SELECT * FROM users WHERE username = $1")
         .bind("test2")
-        .fetch_one(&pool)
+        .fetch_one(&db_pool)
         .await?;
 
     let user: UserResponse = UserResponse {
