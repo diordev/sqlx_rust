@@ -7,7 +7,7 @@ use crate::config::database::Database;
 
 pub async fn create_pg_pool(db: &Database) -> Result<PgPool> {
 
-    let db_url = db.conncetion_string();
+    let db_url = db.connection_string();
     info!("Creating PostgreSQL connection pool...");
 
     let pool = PgPoolOptions::new()

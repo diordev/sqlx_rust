@@ -15,8 +15,8 @@ use sqlx::Row;
 async fn main() -> Result<(), Box<dyn std::error::Error>>  {
     // Database konfiguratsiyasini o'qish
     let db = Database::new()
-        .expect("Database konfiguratsiyasini o'qishda xatolik yuz berdi");
-
+        .expect("Database connection configuration is invalid");
+    println!("Database configuration: {:?}", db.connection_string());
     let pool = create_pg_pool(&db).await?;
 
     // Test query bajarish
