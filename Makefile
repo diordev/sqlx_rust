@@ -14,6 +14,7 @@ run-migrations:
 
 git-pull:
 	git pull origin main
+	
 git-push:
 	git add .
 	git commit -m "Update"
