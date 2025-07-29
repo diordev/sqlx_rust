@@ -1,5 +1,5 @@
-use std::env;
 use dotenvy::dotenv;
+use std::env;
 
 #[derive(Debug, Clone)]
 pub struct Database {
@@ -24,7 +24,15 @@ impl Database {
         let max_connections = env::var("DB_MAX_CONNECTIONS").ok()?.parse::<u32>().ok()?;
         let min_connections = env::var("DB_MIN_CONNECTIONS").ok()?.parse::<u32>().ok()?;
 
-        Some(Database { host, port, user, password, database , max_connections, min_connections})
+        Some(Database {
+            host,
+            port,
+            user,
+            password,
+            database,
+            max_connections,
+            min_connections,
+        })
     }
 
     pub fn connection_string(&self) -> String {
@@ -33,5 +41,4 @@ impl Database {
             self.user, self.password, self.host, self.port, self.database
         )
     }
-
 }

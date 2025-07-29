@@ -1,23 +1,19 @@
-mod config;
 mod components;
+mod config;
 mod db;
 mod dto;
 mod models;
 
-
+use anyhow::Result;
 use config::database::Database;
 use db::pool::create_pg_pool;
-use dto::user::{UserResponse};
-
-use anyhow::Result;
-
-use crate::models::user::User;
+use dto::user::UserResponse;
+use models::user::User;
 
 #[tokio::main]
-async fn main() -> Result<(), Box<dyn std::error::Error>>  {
+async fn main() -> Result<(), Box<dyn std::error::Error>> {
     // Database konfiguratsiyasini o'qish
-    let db = Database::new()
-        .expect("Database connection configuration is invalid");
+    let db = Database::new().expect("Database connection configuration is invalid");
 
     let db_pool = create_pg_pool(&db).await?;
 

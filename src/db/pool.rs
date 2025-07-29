@@ -1,12 +1,11 @@
-use sqlx::{postgres::PgPoolOptions, PgPool};
+use anyhow::{Context, Result};
+use sqlx::{PgPool, postgres::PgPoolOptions};
 use std::time::Duration;
-use anyhow::{Result, Context};
 use tracing::info;
 
 use crate::config::database::Database;
 
 pub async fn create_pg_pool(db: &Database) -> Result<PgPool> {
-    
     let db_url = db.connection_string();
     info!("Creating PostgreSQL connection pool...");
 
@@ -21,7 +20,10 @@ pub async fn create_pg_pool(db: &Database) -> Result<PgPool> {
         .await
         .context("Failed to create PostgreSQL connection pool")?;
 
-    info!("PostgreSQL connection pool created successfully with {} max connections.", db.max_connections);
+    info!(
+        "PostgreSQL connection pool created successfully with {} max connections.",
+        db.max_connections
+    );
 
     Ok(pool)
 }
