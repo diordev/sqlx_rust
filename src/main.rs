@@ -25,7 +25,6 @@ async fn main() -> Result<(), Box<dyn std::error::Error>>  {
     let users: Vec<User> = sqlx::query_as::<_, User>("SELECT * FROM users")
         .fetch_all(&pool)
         .await?;
-
     // Foydalanuvchilarni aylanish
     for user in users.iter() {
         let row = UserResponse {
@@ -37,6 +36,21 @@ async fn main() -> Result<(), Box<dyn std::error::Error>>  {
         };
         println!("Row: {:?}", row);
     }
+
+    // SELECT query - 1 ta foydalanuvchini olish
+    let query: User = sqlx::query_as::<_, User>("SELECT * FROM users WHERE username = $1")
+        .bind("test2")
+        .fetch_one(&pool)
+        .await?;
+
+    let user: UserResponse = UserResponse {
+        id: query.id.to_string(), // uuid -> string
+        username: query.username.clone(),
+        email: query.email.clone(),
+        created_at: query.created_at.to_rfc3339(), // datetime -> string
+        updated_at: query.updated_at.to_rfc3339(),
+    };
+    println!("User: {:?}", user);
 
     Ok(())
 }
